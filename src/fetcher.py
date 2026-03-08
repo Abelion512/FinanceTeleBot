@@ -1,3 +1,4 @@
+import asyncio
 from tavily import TavilyClient
 from loguru import logger
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -18,12 +19,17 @@ class DataFetcher:
             f"berita ekonomi makro indonesia terkini {today}"
         ]
 
-        all_results = []
-        for query in queries:
-            logger.info(f"Searching: {query}")
-            search_result = self.client.search(query=query, search_depth="advanced", max_results=3)
-            all_results.append(search_result)
+        # ⚡ Bolt Optimization: Parallelize searches to reduce total fetch time from O(N) to O(1) relative to request count.
+        # This prevents blocking the event loop and significantly speeds up data retrieval.
+        logger.info(f"Fetching market data for {len(queries)} queries in parallel...")
 
+        tasks = [
+            asyncio.to_thread(self.client.search, query=query, search_depth="advanced", max_results=3)
+            for query in queries
+        ]
+
+        all_results = await asyncio.gather(*tasks)
+        logger.info("Parallel fetching completed successfully.")
         return all_results
 
 fetcher = DataFetcher()
