@@ -1,4 +1,10 @@
 groq
 tavily-python
-requests
+python-telegram-bot
+pydantic
+pydantic-settings
+loguru
+tenacity
+psycopg2-binary
+apscheduler
 python-dotenv
