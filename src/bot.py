@@ -7,6 +7,7 @@ from src.config import settings
 from src.fetcher import fetcher
 from src.analyzer import analyzer
 from src.database import db
+from src.utils import format_idr, format_decimal_id
 from datetime import datetime
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -56,7 +57,7 @@ async def run_analysis(update: Update = None, context: ContextTypes.DEFAULT_TYPE
         gold_change_str = ""
         ihsg_change_str = ""
         if prev_data:
-            prev_gold, prev_ihsg = prev_data
+            prev_gold, prev_ihsg, _ = prev_data
             if prev_gold and analysis.gold_price:
                 diff = float(analysis.gold_price) - float(prev_gold)
                 percent = (diff / float(prev_gold)) * 100
@@ -74,8 +75,8 @@ async def run_analysis(update: Update = None, context: ContextTypes.DEFAULT_TYPE
             f"🔔 **IKI INTEL UPDATE**\n"
             f"📅 Tanggal Data: `{analysis.data_date}`\n\n"
             f"💰 **KONDISI SAAT INI**\n"
-            f"- 🟡 Harga Emas: `Rp {analysis.gold_price:,.0f}/gr`{gold_change_str}\n"
-            f"- 📊 IHSG: `{analysis.ihsg_point:,.2f}`{ihsg_change_str}\n\n"
+            f"- 🟡 Harga Emas: `Rp {format_idr(analysis.gold_price)}/gr`{gold_change_str}\n"
+            f"- 📊 IHSG: `{format_decimal_id(analysis.ihsg_point)}`{ihsg_change_str}\n\n"
             f"📈 **PREDIKSI & SENTIMEN**\n"
             f"Sentimen: **{analysis.sentiment}**\n"
             f"{analysis.summary}\n\n"
@@ -102,7 +103,16 @@ async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await run_analysis(update, context)
 
 async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("✅ Bot aktif dan radar berfungsi normal.")
+    last_update = "Belum ada data."
+    latest = db.get_latest_price()
+    if latest:
+        _, _, ts = latest
+        last_update = ts if isinstance(ts, str) else ts.strftime("%Y-%m-%d %H:%M:%S")
+
+    await update.message.reply_text(
+        f"✅ Bot aktif.\n🕒 Update Terakhir: `{last_update}`",
+        parse_mode=ParseMode.MARKDOWN
+    )
 
 def main():
     logger.info("Starting IKI INTEL PRO application...")

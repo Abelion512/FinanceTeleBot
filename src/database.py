@@ -72,11 +72,11 @@ class Database:
         try:
             if self.use_postgres:
                 with self.conn.cursor() as cur:
-                    cur.execute("SELECT gold_price, ihsg_point FROM analysis_history ORDER BY timestamp DESC LIMIT 1")
+                    cur.execute("SELECT gold_price, ihsg_point, timestamp FROM analysis_history ORDER BY timestamp DESC LIMIT 1")
                     return cur.fetchone()
             else:
                 cursor = self.conn.cursor()
-                cursor.execute("SELECT gold_price, ihsg_point FROM analysis_history ORDER BY timestamp DESC LIMIT 1")
+                cursor.execute("SELECT gold_price, ihsg_point, timestamp FROM analysis_history ORDER BY timestamp DESC LIMIT 1")
                 return cursor.fetchone()
         except Exception as e:
             logger.error(f"Failed to fetch latest price: {e}")
