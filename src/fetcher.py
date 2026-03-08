@@ -6,7 +6,8 @@ from datetime import date
 
 class DataFetcher:
     def __init__(self):
-        self.client = TavilyClient(api_key=settings.TAVILY_API_KEY)
+        # Menggunakan .get_secret_value() karena TAVILY_API_KEY sekarang bertipe SecretStr
+        self.client = TavilyClient(api_key=settings.TAVILY_API_KEY.get_secret_value())
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     async def fetch_market_data(self):

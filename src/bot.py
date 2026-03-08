@@ -88,12 +88,13 @@ async def run_analysis(update: Update = None, context: ContextTypes.DEFAULT_TYPE
         if update:
             await update.message.reply_text(report, parse_mode=ParseMode.MARKDOWN)
         else:
-            bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
+            bot = Bot(token=settings.TELEGRAM_BOT_TOKEN.get_secret_value())
             await bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=report, parse_mode=ParseMode.MARKDOWN)
 
     except Exception as e:
         logger.exception("Analysis failed")
-        error_msg = f"❌ **Analysis Error**: {str(e)}"
+        # Menggunakan pesan error yang generik untuk mencegah kebocoran informasi sensitif
+        error_msg = "❌ **Terjadi kesalahan saat melakukan analisis.** Mohon coba lagi nanti atau hubungi administrator."
         if update:
             await update.message.reply_text(error_msg, parse_mode=ParseMode.MARKDOWN)
 
@@ -106,7 +107,7 @@ async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     logger.info("Starting IKI INTEL PRO application...")
-    application = Application.builder().token(settings.TELEGRAM_BOT_TOKEN).build()
+    application = Application.builder().token(settings.TELEGRAM_BOT_TOKEN.get_secret_value()).build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("analyze", analyze_command))
