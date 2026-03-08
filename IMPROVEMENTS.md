@@ -3,6 +3,7 @@
 Berikut adalah 30+ poin improvisasi yang telah diimplementasikan atau direncanakan untuk membuat bot ini menjadi sistem intelijen finansial kelas dunia.
 
 ## 🏗️ Arsitektur & Performa
+
 1. **Modularisasi Kode**: Memecah bot menjadi modul `fetcher`, `analyzer`, `database`, `config`, dan `bot` agar mudah di-debug.
 2. **Asyncio-First**: Seluruh operasi I/O (API, DB) berjalan secara asinkron untuk efisiensi tinggi.
 3. **Structured Output LLM**: Menggunakan JSON mode pada Groq agar hasil analisis selalu dalam format yang konsisten dan divalidasi oleh Pydantic.
@@ -11,6 +12,7 @@ Berikut adalah 30+ poin improvisasi yang telah diimplementasikan atau direncanak
 6. **Graceful Shutdown**: Menangani sinyal terminasi agar bot menutup koneksi database dengan rapi sebelum mati.
 
 ## 🛡️ Keamanan & Reliabilitas
+
 7. **Strict ENV Validation**: Aplikasi tidak akan jalan jika ada API key atau konfigurasi yang kurang, mencegah error di tengah jalan.
 8. **Tenacity Retries**: Strategi retry eksponensial untuk mengatasi gangguan jaringan sementara pada API Tavily, Groq, atau Telegram.
 9. **Loguru Logging**: Logging terpusat dengan informasi level (INFO, DEBUG, ERROR) dan metadata untuk troubleshooting cepat.
@@ -18,6 +20,7 @@ Berikut adalah 30+ poin improvisasi yang telah diimplementasikan atau direncanak
 11. **Secret Masking**: Memastikan API key tidak pernah muncul dalam log meskipun terjadi error.
 
 ## 📊 Akurasi Data
+
 12. **Query Engineering**: Menggunakan query pencarian yang lebih spesifik (dengan tanggal hari ini) untuk meminimalkan halusinasi LLM.
 13. **Timestamp Verification**: Membandingkan tanggal data yang ditemukan oleh AI dengan tanggal hari ini dan memberikan peringatan jika data "stale".
 14. **Data Deduplication**: Filter hasil pencarian Tavily untuk menghindari duplikasi sumber berita yang sama.
@@ -25,6 +28,7 @@ Berikut adalah 30+ poin improvisasi yang telah diimplementasikan atau direncanak
 16. **IHSG Consistency Check**: Memastikan poin IHSG selalu dalam format desimal standar.
 
 ## 🤖 Fitur User Experience (UX)
+
 17. **Bot Aktif (Polling)**: Bot sekarang selalu aktif dan merespon command (/start, /analyze, /status).
 18. **Automated Scheduler**: Update otomatis setiap X menit (konfigurasi via ENV) tanpa perlu campur tangan manusia.
 19. **Historical Comparison**: Bot secara otomatis menghitung persentase kenaikan/penurunan harga dibanding update terakhir.
@@ -33,6 +37,7 @@ Berikut adalah 30+ poin improvisasi yang telah diimplementasikan atau direncanak
 22. **Rich Formatting**: Laporan menggunakan format Bold, Code, dan List yang rapi di Telegram.
 
 ## 📈 Strategi Masa Depan (Rekomendasi)
+
 23. **Multi-Model Fallback**: Jika Groq gagal, sistem bisa otomatis beralih ke OpenAI atau Anthropic.
 24. **Chart Generation**: Menggunakan library Matplotlib/Plotly untuk menghasilkan grafik pergerakan harga dan mengirimkannya sebagai gambar ke Telegram.
 25. **Price Alerts**: Fitur di mana user bisa menset target harga (misal: "Ingatkan saya kalau emas turun di bawah 1jt").
@@ -44,4 +49,5 @@ Berikut adalah 30+ poin improvisasi yang telah diimplementasikan atau direncanak
 31. **Integration with Trading APIs**: (Advanced) Eksekusi pembelian emas otomatis melalui API jika kondisi pasar memenuhi kriteria tertentu.
 
 ---
-*Dokumentasi ini dibuat oleh Jules sebagai bagian dari transformasi IKI INTEL PRO v2.0.*
+
+_Dokumentasi ini dibuat oleh Abelion sebagai bagian dari transformasi IKI INTEL PRO v2.0._

@@ -8,9 +8,9 @@ load_dotenv()
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', extra='ignore')
 
-    TAVILY_API_KEY: str
-    GROQ_API_KEY: str
-    TELEGRAM_BOT_TOKEN: str
+    TAVILY_API_KEY: SecretStr
+    GROQ_API_KEY: SecretStr
+    TELEGRAM_BOT_TOKEN: SecretStr
     TELEGRAM_CHAT_ID: str
 
     # Database

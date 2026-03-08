@@ -28,7 +28,7 @@ class MarketAnalysis(BaseModel):
 
 class AnalysisEngine:
     def __init__(self):
-        self.client = Groq(api_key=settings.GROQ_API_KEY)
+        self.client = Groq(api_key=settings.GROQ_API_KEY.get_secret_value())
         self.model = "llama-3.1-8b-instant"
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
