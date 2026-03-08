@@ -1,3 +1,4 @@
+import asyncio
 from groq import Groq
 from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
@@ -46,7 +47,10 @@ class AnalysisEngine:
         Keluarkan hasil dalam format JSON yang valid sesuai dengan schema MarketAnalysis.
         """
 
-        completion = self.client.chat.completions.create(
+        # ⚡ Bolt Optimization: Run synchronous Groq API call in a separate thread to prevent blocking the event loop.
+        # This allows other async tasks (like bot polling or other users' requests) to proceed while waiting for LLM response.
+        completion = await asyncio.to_thread(
+            self.client.chat.completions.create,
             model=self.model,
             messages=[
                 {"role": "system", "content": "You are a financial analyst. Always output JSON based on provided schema."},
